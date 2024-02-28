@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vernam Cipher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Vernam Cipher</h2>
+
+    <label for="message">Enter Message:</label>
+    <input type="text" id="message" placeholder="Enter your message">
+
+    <button onclick="encrypt()">Encrypt</button>
+    <button onclick="decrypt()">Decrypt</button>
+
+    <h3>Encryption Formula:</h3>
+    <p>E<sub>i</sub> = (M<sub>i</sub> + K<sub>i</sub>) mod 26</p>
+
+    <h3>Decryption Formula:</h3>
+    <p>M<sub>i</sub> = (E<sub>i</sub> - K<sub>i</sub> + 26) mod 26</p>
+
+    <h3>Key Table:</h3>
+    <table id="keyTable">
+        <thead>
+            <tr>
+                <th>Character</th>
+                <th>ASCII</th>
+                <th>Key</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        function encrypt() {
+            var message = document.getElementById('message').value.toUpperCase();
+            var key = generateRandomKey(message.length);
+            var encryptedMessage = '';
+
+            for (var i = 0; i < message.length; i++) {
+                var charCode = message.charCodeAt(i) - 65;
+                var encryptedChar = (charCode + key[i]) % 26 + 65;
+                encryptedMessage += String.fromCharCode(encryptedChar);
+            }
+
+            displayKeyTable(key);
+            alert('Encrypted Message: ' + encryptedMessage);
+        }
+
+        function decrypt() {
+            var message = document.getElementById('message').value.toUpperCase();
+            var key = generateRandomKey(message.length);
+            var decryptedMessage = '';
+
+            for (var i = 0; i < message.length; i++) {
+                var charCode = message.charCodeAt(i) - 65;
+                var decryptedChar = (charCode - key[i] + 26) % 26 + 65;
+                decryptedMessage += String.fromCharCode(decryptedChar);
+            }
+
+            displayKeyTable(key);
+            alert('Decrypted Message: ' + decryptedMessage);
+        }
+
+        function generateRandomKey(length) {
+            var key = [];
+            for (var i = 0; i < length; i++) {
+                key.push(Math.floor(Math.random() * 26));
+            }
+            return key;
+        }
+
+        function displayKeyTable(key) {
+            var tableBody = document.querySelector('#keyTable tbody');
+            tableBody.innerHTML = '';
+
+            for (var i = 0; i < key.length; i++) {
+                var row = tableBody.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                
+                cell1.textContent = String.fromCharCode(i + 65);
+                cell2.textContent = i + 65;
+                cell3.textContent = key[i];
+            }
+        }
+    </script>
+</body>
+</html>
